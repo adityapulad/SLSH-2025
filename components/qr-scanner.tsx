@@ -22,7 +22,13 @@ export function QRScanner() {
     location?: EcoLocation
     action?: any
     points?: number
+    basePoints?: number
+    bonusPoints?: number
+    bonusReasons?: string[]
     message: string
+    storyUnlocked?: boolean
+    story?: any
+    nextActions?: any[]
   } | null>(null)
   const [showPointsAnimation, setShowPointsAnimation] = useState(false)
   const [animationData, setAnimationData] = useState({ points: 0, action: "" })
