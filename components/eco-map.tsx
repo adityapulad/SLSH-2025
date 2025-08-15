@@ -161,7 +161,44 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
 
   useEffect(() => {
     loadLocations()
+    requestLocationPermission()
   }, [])
+
+  // Request user location permission
+  const requestLocationPermission = async () => {
+    if (!navigator.geolocation) {
+      console.log("Geolocation is not supported by this browser")
+      return
+    }
+
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000 // Cache for 5 minutes
+        })
+      })
+
+      const userPos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      }
+
+      setUserLocation(userPos)
+      setLocationPermission('granted')
+
+      // If user is in Himachal Pradesh area, center map on their location
+      if (userPos.lat >= 30.0 && userPos.lat <= 33.0 && userPos.lng >= 75.0 && userPos.lng <= 79.0) {
+        setMapCenter(userPos)
+        setZoom(12)
+      }
+
+    } catch (error) {
+      console.log("Error getting location:", error)
+      setLocationPermission('denied')
+    }
+  }
 
   useEffect(() => {
     const searchLocations = async () => {
