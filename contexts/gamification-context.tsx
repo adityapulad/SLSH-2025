@@ -15,20 +15,33 @@ interface GamificationContextType {
   simulateSteps: (steps: number) => void
   recentCheckIns: CheckIn[]
   addCheckIn: (checkIn: CheckIn) => void
+  todayStats: {
+    bottlesRefilled: number
+    wasteDisposed: number
+    stepsWalked: number
+    pointsEarned: number
+  }
+  totalPoints: number
 }
 
 const GamificationContext = createContext<GamificationContextType | undefined>(undefined)
 
-// Point values for different actions
+// Point values for different actions with Himachal Pradesh bonuses
 const ACTION_POINTS = {
   "water-refill": 20,
   "waste-deposit": 30,
   "eco-restaurant-visit": 50,
+  "visit": 40,
   "story-unlock": 25,
   "daily-steps-5k": 50,
   "daily-steps-8k": 100,
   "daily-steps-12k": 200,
   "daily-steps-15k": 300,
+  // Himachal Pradesh specific bonuses
+  "mountain-bonus": 5,
+  "heritage-bonus": 10,
+  "high-altitude-bonus": 8,
+  "cultural-bonus": 12,
 }
 
 export function GamificationProvider({ children }: { children: ReactNode }) {
@@ -141,13 +154,17 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
     }
 
     // Check Mountain Guardian (25 waste deposits)
-    const wasteDeposits = recentCheckIns.filter((c) => c.actionType === "waste-deposit").length
+    const wasteDeposits = recentCheckIns.filter((c) =>
+      c.actionType === "waste-deposit" || c.actionType.includes("waste")
+    ).length
     if (wasteDeposits >= 25) {
       unlockBadge("2")
     }
 
-    // Check Local Patron (10 eco-restaurant visits) - already unlocked in mock data
-    const restaurantVisits = recentCheckIns.filter((c) => c.actionType === "eco-restaurant-visit").length
+    // Check Local Patron (10 eco-restaurant visits)
+    const restaurantVisits = recentCheckIns.filter((c) =>
+      c.actionType === "eco-restaurant-visit" || c.actionType === "visit"
+    ).length
     if (restaurantVisits >= 10) {
       unlockBadge("3")
     }
@@ -162,11 +179,53 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
     if (user.totalDistanceWalked >= 100) {
       unlockBadge("5")
     }
+
+    // Himachal Pradesh specific badges
+    // Himalayan Explorer - Visit 5 different valleys
+    const uniqueLocations = [...new Set(recentCheckIns.map(c => c.locationId))].length
+    if (uniqueLocations >= 5) {
+      unlockBadge("6")
+    }
+
+    // High Altitude Hero - Check in at high altitude locations
+    const highAltitudeVisits = recentCheckIns.filter(c =>
+      c.locationId && (
+        c.locationId.includes("shimla") ||
+        c.locationId.includes("manali") ||
+        c.locationId.includes("dharamshala")
+      )
+    ).length
+    if (highAltitudeVisits >= 3) {
+      unlockBadge("7")
+    }
+
+    // Cultural Bridge - Unlock cultural stories
+    if (storiesUnlocked >= 5) {
+      unlockBadge("8")
+    }
   }
 
   const addCheckIn = (checkIn: CheckIn) => {
     setRecentCheckIns((prev) => [checkIn, ...prev.slice(0, 9)])
   }
+
+  // Calculate today's stats
+  const todayStats = {
+    bottlesRefilled: recentCheckIns.filter(c =>
+      c.actionType === "water-refill" &&
+      c.timestamp.toDateString() === new Date().toDateString()
+    ).length,
+    wasteDisposed: recentCheckIns.filter(c =>
+      (c.actionType === "waste-deposit" || c.actionType.includes("waste")) &&
+      c.timestamp.toDateString() === new Date().toDateString()
+    ).length,
+    stepsWalked: dailySteps,
+    pointsEarned: recentCheckIns
+      .filter(c => c.timestamp.toDateString() === new Date().toDateString())
+      .reduce((sum, c) => sum + c.pointsEarned, 0) + stepPoints
+  }
+
+  const totalPoints = user?.ecoPoints || 0
 
   return (
     <GamificationContext.Provider
@@ -180,6 +239,8 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
         simulateSteps,
         recentCheckIns,
         addCheckIn,
+        todayStats,
+        totalPoints,
       }}
     >
       {children}

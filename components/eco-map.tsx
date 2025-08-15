@@ -43,6 +43,8 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
   const [mapType, setMapType] = useState<"roadmap" | "satellite" | "terrain">("roadmap")
   const [mapCenter, setMapCenter] = useState({ lat: 31.1048, lng: 77.1734 }) // Shimla, HP
   const [zoom, setZoom] = useState(9)
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
+  const [locationPermission, setLocationPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [showLocationDetails, setShowLocationDetails] = useState(false)
@@ -159,7 +161,44 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
 
   useEffect(() => {
     loadLocations()
+    requestLocationPermission()
   }, [])
+
+  // Request user location permission
+  const requestLocationPermission = async () => {
+    if (!navigator.geolocation) {
+      console.log("Geolocation is not supported by this browser")
+      return
+    }
+
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000 // Cache for 5 minutes
+        })
+      })
+
+      const userPos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      }
+
+      setUserLocation(userPos)
+      setLocationPermission('granted')
+
+      // If user is in Himachal Pradesh area, center map on their location
+      if (userPos.lat >= 30.0 && userPos.lat <= 33.0 && userPos.lng >= 75.0 && userPos.lng <= 79.0) {
+        setMapCenter(userPos)
+        setZoom(12)
+      }
+
+    } catch (error) {
+      console.log("Error getting location:", error)
+      setLocationPermission('denied')
+    }
+  }
 
   useEffect(() => {
     const searchLocations = async () => {
@@ -280,12 +319,21 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
   }
 
   const getGoogleMapsEmbedUrl = () => {
-    const baseUrl = `https://maps.google.com/maps?q=${mapCenter.lat},${mapCenter.lng}&t=${mapType}&z=${zoom}&output=embed`
+    let markersParam = ""
 
+    // Add selected location marker
     if (selectedLocation) {
-      return `${baseUrl}&markers=${selectedLocation.latitude},${selectedLocation.longitude}`
+      markersParam = `&markers=color:red%7C${selectedLocation.latitude},${selectedLocation.longitude}`
     }
 
+    // Add user location marker if available
+    if (userLocation && !selectedLocation) {
+      markersParam = `&markers=color:blue%7Clabel:You%7C${userLocation.lat},${userLocation.lng}`
+    } else if (userLocation && selectedLocation) {
+      markersParam += `&markers=color:blue%7Clabel:You%7C${userLocation.lat},${userLocation.lng}`
+    }
+
+    const baseUrl = `https://maps.google.com/maps?q=${mapCenter.lat},${mapCenter.lng}&t=${mapType}&z=${zoom}&output=embed${markersParam}`
     return baseUrl
   }
 
@@ -662,6 +710,26 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
               <Layers className="h-4 w-4" />
             )}
           </Button>
+          {userLocation && (
+            <Button
+              onClick={() => {
+                setMapCenter(userLocation)
+                setZoom(15)
+                setSelectedLocation(null)
+                setShowLocationDetails(false)
+                if (liveRegionRef.current) {
+                  liveRegionRef.current.textContent = "Map centered on your location"
+                }
+              }}
+              size="sm"
+              className="bg-blue-600 text-white hover:bg-blue-700 shadow-lg focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 w-10 h-10 p-0"
+              variant="outline"
+              aria-label="Center map on your location"
+              title="Go to my location"
+            >
+              <MapPin className="h-4 w-4" />
+            </Button>
+          )}
           <Button
             onClick={recenterMap}
             size="sm"
@@ -671,6 +739,18 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
           >
             <Navigation className="h-4 w-4" aria-hidden="true" />
           </Button>
+          {locationPermission === 'denied' && (
+            <Button
+              onClick={requestLocationPermission}
+              size="sm"
+              className="bg-orange-600 text-white hover:bg-orange-700 shadow-lg focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 w-10 h-10 p-0"
+              variant="outline"
+              aria-label="Request location access"
+              title="Enable location"
+            >
+              <MapPin className="h-4 w-4" />
+            </Button>
+          )}
         </div>
 
         {selectedLocation && (

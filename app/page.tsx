@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { AppHeader } from "@/components/app-header"
 import { MobileNavigation } from "@/components/mobile-navigation"
+import { EcoMap } from "@/components/eco-map"
 import { Loader2, MapPin, QrCode, Droplets, Trash2, TestTube, Footprints, TreePine } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -14,12 +15,6 @@ export default function HomePage() {
   const { user, isLoading } = useAuth()
   const { totalPoints, todayStats } = useGamification()
   const router = useRouter()
-  const [mapLoading, setMapLoading] = useState(true)
-
-  useEffect(() => {
-    const timer = setTimeout(() => setMapLoading(false), 2000)
-    return () => clearTimeout(timer)
-  }, [])
 
   if (isLoading) {
     return (
@@ -64,33 +59,10 @@ export default function HomePage() {
       <AppHeader />
 
       <div className="px-3 sm:px-4 py-4 sm:py-6 max-w-6xl mx-auto">
-        <div className="bg-white rounded-lg shadow-sm mb-4 sm:mb-6 h-48 sm:h-64 relative overflow-hidden">
-          {mapLoading ? (
-            <div className="flex items-center justify-center h-full p-4">
-              <div className="text-center">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                  <MapPin className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
-                </div>
-                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">Loading Google Maps</h3>
-                <p className="text-sm sm:text-base text-gray-500 mb-3 sm:mb-4">Please wait a moment...</p>
-                <div className="w-32 sm:w-48 h-2 bg-gray-200 rounded-full mx-auto">
-                  <div className="w-20 sm:w-32 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="h-full bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center p-4">
-              <Button
-                onClick={() => router.push("/map")}
-                className="bg-green-600 hover:bg-green-700 text-white h-11 px-6 text-sm sm:text-base"
-              >
-                <MapPin className="h-4 w-4 mr-2" />
-                Open Interactive Map
-              </Button>
-            </div>
-          )}
+        <div className="bg-white rounded-lg shadow-sm mb-4 sm:mb-6 h-48 sm:h-64 lg:h-80 relative overflow-hidden">
+          <EcoMap />
 
-          <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-white rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 shadow-sm">
+          <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-white rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 shadow-sm z-10">
             <div className="flex items-center space-x-2 sm:space-x-4 text-xs sm:text-sm">
               <div className="flex items-center space-x-1">
                 <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-red-500" />

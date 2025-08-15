@@ -41,7 +41,17 @@ export function CommunityEvents() {
     if (title.toLowerCase().includes("cleanup")) return "bg-green-100 text-green-800"
     if (title.toLowerCase().includes("workshop")) return "bg-blue-100 text-blue-800"
     if (title.toLowerCase().includes("market")) return "bg-orange-100 text-orange-800"
-    return "bg-purple-100 text-purple-800"
+    if (title.toLowerCase().includes("trek")) return "bg-purple-100 text-purple-800"
+    return "bg-indigo-100 text-indigo-800"
+  }
+
+  const getLocationEmoji = (location: string) => {
+    if (location.includes("Shimla")) return "🏔️"
+    if (location.includes("Manali")) return "🏂"
+    if (location.includes("Kullu")) return "🍎"
+    if (location.includes("Parvati")) return "🌿"
+    if (location.includes("Dharamshala")) return "🕉️"
+    return "🏞️"
   }
 
   const isEventSoon = (date: Date) => {
@@ -55,8 +65,18 @@ export function CommunityEvents() {
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Community Events</h1>
-          <p className="text-gray-600">Join local events and connect with like-minded eco-warriors</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Himachal Pradesh Community Events</h1>
+          <p className="text-gray-600">Join local eco-warriors across the hills and valleys of DevBhoomi</p>
+          <div className="mt-4 grid grid-cols-2 gap-4">
+            <div className="bg-green-50 p-3 rounded-lg border border-green-200">
+              <div className="text-lg font-bold text-green-800">🏔️ Mountain Cleanups</div>
+              <div className="text-sm text-green-600">Keep our hills pristine</div>
+            </div>
+            <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+              <div className="text-lg font-bold text-blue-800">🌱 Sustainable Living</div>
+              <div className="text-sm text-blue-600">Learn eco-friendly practices</div>
+            </div>
+          </div>
         </div>
 
         {/* Events List */}
@@ -100,6 +120,7 @@ export function CommunityEvents() {
 
                   <div className="flex items-center gap-4 text-sm text-gray-600">
                     <div className="flex items-center gap-1">
+                      <span className="text-lg">{getLocationEmoji(event.location)}</span>
                       <MapPin className="h-4 w-4" />
                       <span>{event.location}</span>
                     </div>

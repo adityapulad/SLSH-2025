@@ -10,6 +10,7 @@ import { mockEcoLocations } from "@/data/mock-data"
 import { useGamification } from "@/contexts/gamification-context"
 import { PointsAnimation } from "./points-animation"
 import type { EcoLocation } from "@/types"
+import jsQR from "jsqr"
 
 export function QRScanner() {
   const [isScanning, setIsScanning] = useState(false)
@@ -21,7 +22,13 @@ export function QRScanner() {
     location?: EcoLocation
     action?: any
     points?: number
+    basePoints?: number
+    bonusPoints?: number
+    bonusReasons?: string[]
     message: string
+    storyUnlocked?: boolean
+    story?: any
+    nextActions?: any[]
   } | null>(null)
   const [showPointsAnimation, setShowPointsAnimation] = useState(false)
   const [animationData, setAnimationData] = useState({ points: 0, action: "" })
@@ -103,16 +110,34 @@ export function QRScanner() {
     }, 500) // Check every 500ms
   }
 
-  // Simulate QR detection from image data
+  // Real QR detection using jsQR
   const detectQRFromImageData = (imageData: ImageData) => {
-    // In a real implementation, you would use a QR detection library here
-    // For demo purposes, we'll simulate detection of demo QR codes
-    // This is a placeholder - in reality you'd use libraries like:
-    // - qr-scanner
-    // - jsqr
-    // - qrcode-reader
-    // For now, we'll just check if any demo QR codes should be "detected"
-    // This is just for demonstration
+    try {
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: "dontInvert",
+      })
+
+      if (code && code.data) {
+        // Found a QR code, process it
+        console.log("QR Code detected:", code.data)
+        handleScan(code.data)
+
+        // Stop scanning temporarily to prevent multiple scans
+        if (scanIntervalRef.current) {
+          clearInterval(scanIntervalRef.current)
+          scanIntervalRef.current = null
+        }
+
+        // Restart scanning after a delay
+        setTimeout(() => {
+          if (isCameraActive && !isScanning) {
+            startQRDetection()
+          }
+        }, 3000)
+      }
+    } catch (error) {
+      console.error("QR detection error:", error)
+    }
   }
 
   const handleScan = async (qrCode: string) => {
@@ -120,47 +145,91 @@ export function QRScanner() {
 
     setIsScanning(true)
 
-    // Simulate scanning delay
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    try {
+      // Find location by QR code first for UI feedback
+      const location = mockEcoLocations.find((loc) => loc.qrCode === qrCode)
 
-    // Find location by QR code
-    const location = mockEcoLocations.find((loc) => loc.qrCode === qrCode)
+      if (!location) {
+        setScanResult({
+          success: false,
+          message: "Invalid QR code. Please scan a valid eco-location QR code from Himachal Pradesh.",
+        })
+        setIsScanning(false)
+        return
+      }
 
-    if (!location) {
+      // Get the first available action (in real app, user would select)
+      const action = location.availableActions[0]
+      if (!action) {
+        setScanResult({
+          success: false,
+          message: "No eco-actions available at this location.",
+        })
+        setIsScanning(false)
+        return
+      }
+
+      // Call the enhanced check-in API
+      const response = await fetch(`/api/locations/${location.id}/checkin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: 'demo-user-123', // In real app, get from auth context
+          qrCode: qrCode,
+          action: action.type,
+          timestamp: new Date().toISOString()
+        })
+      })
+
+      const result = await response.json()
+
+      if (!result.success) {
+        setScanResult({
+          success: false,
+          message: result.error || "Check-in failed. Please try again.",
+        })
+        setIsScanning(false)
+        return
+      }
+
+      // Award points through gamification system
+      await earnPoints(action.type, result.data.totalPoints, location.id)
+
+      // Show success result with enhanced data
+      setScanResult({
+        success: true,
+        location,
+        action: {
+          ...action,
+          description: result.data.action
+        },
+        points: result.data.totalPoints,
+        basePoints: result.data.basePoints,
+        bonusPoints: result.data.bonusPoints,
+        bonusReasons: result.data.bonusReasons,
+        message: result.data.message,
+        storyUnlocked: result.data.storyUnlocked,
+        story: result.data.story,
+        nextActions: result.data.nextActions
+      })
+
+      // Show points animation
+      setAnimationData({
+        points: result.data.totalPoints,
+        action: result.data.action,
+        bonus: result.data.bonusPoints > 0
+      })
+      setShowPointsAnimation(true)
+
+    } catch (error) {
+      console.error('Check-in error:', error)
       setScanResult({
         success: false,
-        message: "Invalid QR code. Please try scanning a valid eco-location QR code.",
+        message: "Network error. Please check your connection and try again.",
       })
-      setIsScanning(false)
-      return
     }
-
-    // Get available action (for demo, we'll use the first available action)
-    const action = location.availableActions[0]
-    if (!action) {
-      setScanResult({
-        success: false,
-        message: "No actions available at this location.",
-      })
-      setIsScanning(false)
-      return
-    }
-
-    // Award points
-    await earnPoints(action.type, action.points, location.id)
-
-    // Show success result
-    setScanResult({
-      success: true,
-      location,
-      action,
-      points: action.points,
-      message: `Successfully checked in at ${location.name}!`,
-    })
-
-    // Show points animation
-    setAnimationData({ points: action.points, action: action.type })
-    setShowPointsAnimation(true)
 
     setIsScanning(false)
   }
@@ -357,11 +426,33 @@ export function QRScanner() {
                     <div className="p-3 bg-white rounded-lg border">
                       <div className="font-medium text-sm sm:text-base">{scanResult.location.name}</div>
                       <div className="text-sm text-gray-600">{scanResult.location.address}</div>
+                      <div className="text-xs text-blue-600 mt-1">📍 Himachal Pradesh</div>
                     </div>
 
-                    <div className="flex items-center justify-center gap-2 flex-wrap">
-                      <Badge className="bg-green-100 text-green-800">{scanResult.action.description}</Badge>
-                      <Badge className="bg-yellow-100 text-yellow-800">+{scanResult.points} points</Badge>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-center gap-2 flex-wrap">
+                        <Badge className="bg-green-100 text-green-800">{scanResult.action.description}</Badge>
+                        <Badge className="bg-yellow-100 text-yellow-800">+{scanResult.points} total points</Badge>
+                      </div>
+
+                      {scanResult.bonusPoints && scanResult.bonusPoints > 0 && (
+                        <div className="text-center">
+                          <div className="text-xs text-green-700 font-medium">
+                            Base: {scanResult.basePoints} + Bonus: {scanResult.bonusPoints} points
+                          </div>
+                          {scanResult.bonusReasons && scanResult.bonusReasons.length > 0 && (
+                            <div className="text-xs text-green-600 mt-1">
+                              🎯 {scanResult.bonusReasons.join(", ")}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {scanResult.storyUnlocked && (
+                        <Badge className="bg-purple-100 text-purple-800 w-full justify-center">
+                          🏛️ Cultural Story Unlocked!
+                        </Badge>
+                      )}
                     </div>
 
                     <img
@@ -369,6 +460,19 @@ export function QRScanner() {
                       alt={scanResult.location.name}
                       className="w-full h-32 object-cover rounded-lg"
                     />
+
+                    {scanResult.nextActions && scanResult.nextActions.length > 0 && (
+                      <div className="p-3 bg-blue-50 rounded-lg">
+                        <div className="text-sm font-medium text-blue-800 mb-2">More actions available:</div>
+                        <div className="space-y-1">
+                          {scanResult.nextActions.map((nextAction, index) => (
+                            <div key={index} className="text-xs text-blue-700">
+                              • {nextAction.description} (+{nextAction.points} pts)
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 

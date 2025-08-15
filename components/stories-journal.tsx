@@ -48,12 +48,17 @@ export function StoriesJournal() {
       <div className="min-h-screen bg-gray-50 p-4">
         <Card className="max-w-md mx-auto">
           <CardContent className="p-8 text-center">
+            <div className="text-4xl mb-4">🏔️</div>
             <BookOpen className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-lg font-semibold mb-2">No Stories Yet</h3>
+            <h3 className="text-lg font-semibold mb-2">No Himachali Stories Yet</h3>
             <p className="text-gray-600 mb-4">
-              Explore eco-locations and scan QR codes to unlock fascinating cultural stories!
+              Explore the mystical valleys, ancient temples, and cultural heritage sites of Himachal Pradesh.
+              Scan QR codes at eco-locations to unlock fascinating stories of DevBhoomi!
             </p>
-            <Button className="bg-green-600 hover:bg-green-700">Start Exploring</Button>
+            <div className="text-sm text-blue-600 mb-4">
+              🏛️ Temple legends • 🕉️ Buddhist wisdom • 🏔️ Mountain folklore
+            </div>
+            <Button className="bg-green-600 hover:bg-green-700">Start Exploring HP</Button>
           </CardContent>
         </Card>
       </div>
@@ -65,10 +70,22 @@ export function StoriesJournal() {
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">My Story Journal</h1>
-          <p className="text-gray-600">
-            {unlockedStories.length} cultural {unlockedStories.length === 1 ? "story" : "stories"} unlocked
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">🏔️ Himachal Pradesh Story Journal</h1>
+          <p className="text-gray-600 mb-4">
+            {unlockedStories.length} cultural {unlockedStories.length === 1 ? "story" : "stories"} from DevBhoomi unlocked
           </p>
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg border border-green-200">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <div className="font-semibold text-green-800">🏛️ Heritage Tales</div>
+                <div className="text-green-600">Ancient temples & monuments</div>
+              </div>
+              <div>
+                <div className="font-semibold text-blue-800">🕉️ Cultural Wisdom</div>
+                <div className="text-blue-600">Tibetan & Himachali traditions</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Search */}
