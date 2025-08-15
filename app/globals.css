@@ -152,3 +152,6 @@
     touch-action: manipulation;
   }
 }
+
+/* Hide Vercel branding button that appears on deployed apps */
+/* Hide Vercel toolbar and branding elements */

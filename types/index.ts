@@ -18,7 +18,7 @@ export interface User {
 export interface EcoLocation {
   id: string
   name: string
-  type: "water-refill" | "eco-restaurant" | "waste-disposal" | "cultural-site"
+  type: "water-refill" | "eco-restaurant" | "waste-disposal" | "cultural-site" | "eco-accommodation"
   latitude: number
   longitude: number
   address: string
@@ -28,6 +28,9 @@ export interface EcoLocation {
   story?: CulturalStory
   qrCode: string
   availableActions: EcoAction[]
+  reviews: Review[]
+  averageRating: number
+  totalReviews: number
 }
 
 export interface EcoAction {
@@ -107,4 +110,46 @@ export interface GuestUser {
   sessionId: string
   createdAt: Date
   limitations: string[]
+}
+
+export interface Review {
+  id: string
+  userId: string
+  userName: string
+  userProfilePicture?: string
+  locationId: string
+  rating: number // 1-5 stars
+  title: string
+  content: string
+  images?: string[]
+  likes: number
+  dislikes: number
+  userLikes: string[] // Array of user IDs who liked
+  userDislikes: string[] // Array of user IDs who disliked
+  isVerifiedVisit: boolean // True if user actually checked in at location
+  visitDate?: Date
+  createdAt: Date
+  updatedAt: Date
+  helpful: number // Number of users who found this helpful
+  tags: ReviewTag[]
+}
+
+export interface ReviewTag {
+  id: string
+  name: string
+  color: string
+}
+
+export interface ReviewSummary {
+  locationId: string
+  averageRating: number
+  totalReviews: number
+  ratingDistribution: {
+    5: number
+    4: number
+    3: number
+    2: number
+    1: number
+  }
+  topTags: ReviewTag[]
 }

@@ -44,7 +44,7 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
   const [mapCenter, setMapCenter] = useState({ lat: 31.1048, lng: 77.1734 }) // Shimla, HP
   const [zoom, setZoom] = useState(9)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
-  const [locationPermission, setLocationPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt')
+  const [locationPermission, setLocationPermission] = useState<"granted" | "denied" | "prompt">("prompt")
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [showLocationDetails, setShowLocationDetails] = useState(false)
@@ -176,27 +176,26 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
         navigator.geolocation.getCurrentPosition(resolve, reject, {
           enableHighAccuracy: true,
           timeout: 10000,
-          maximumAge: 300000 // Cache for 5 minutes
+          maximumAge: 300000, // Cache for 5 minutes
         })
       })
 
       const userPos = {
         lat: position.coords.latitude,
-        lng: position.coords.longitude
+        lng: position.coords.longitude,
       }
 
       setUserLocation(userPos)
-      setLocationPermission('granted')
+      setLocationPermission("granted")
 
       // If user is in Himachal Pradesh area, center map on their location
       if (userPos.lat >= 30.0 && userPos.lat <= 33.0 && userPos.lng >= 75.0 && userPos.lng <= 79.0) {
         setMapCenter(userPos)
         setZoom(12)
       }
-
     } catch (error) {
       console.log("Error getting location:", error)
-      setLocationPermission('denied')
+      setLocationPermission("denied")
     }
   }
 
@@ -739,7 +738,7 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
           >
             <Navigation className="h-4 w-4" aria-hidden="true" />
           </Button>
-          {locationPermission === 'denied' && (
+          {locationPermission === "denied" && (
             <Button
               onClick={requestLocationPermission}
               size="sm"
@@ -825,6 +824,22 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
                   <p id="location-description" className="text-sm text-gray-600">
                     {selectedLocation.description}
                   </p>
+
+                  <div className="flex items-center gap-4 py-2 border-t border-gray-100">
+                    <div className="flex items-center gap-1">
+                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                      <span className="font-medium">{selectedLocation.averageRating?.toFixed(1) || "0.0"}</span>
+                    </div>
+                    <span className="text-sm text-gray-600">{selectedLocation.totalReviews || 0} reviews</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => router.push(`/location/${selectedLocation.id}/reviews`)}
+                      className="text-green-600 hover:text-green-700 p-0 h-auto"
+                    >
+                      View all reviews
+                    </Button>
+                  </div>
 
                   <div className="flex flex-col sm:flex-row gap-3 pt-2">
                     <Button
