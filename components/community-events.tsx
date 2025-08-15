@@ -120,6 +120,7 @@ export function CommunityEvents() {
 
                   <div className="flex items-center gap-4 text-sm text-gray-600">
                     <div className="flex items-center gap-1">
+                      <span className="text-lg">{getLocationEmoji(event.location)}</span>
                       <MapPin className="h-4 w-4" />
                       <span>{event.location}</span>
                     </div>
