@@ -65,10 +65,22 @@ export function StoriesJournal() {
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">My Story Journal</h1>
-          <p className="text-gray-600">
-            {unlockedStories.length} cultural {unlockedStories.length === 1 ? "story" : "stories"} unlocked
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">🏔️ Himachal Pradesh Story Journal</h1>
+          <p className="text-gray-600 mb-4">
+            {unlockedStories.length} cultural {unlockedStories.length === 1 ? "story" : "stories"} from DevBhoomi unlocked
           </p>
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg border border-green-200">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <div className="font-semibold text-green-800">🏛️ Heritage Tales</div>
+                <div className="text-green-600">Ancient temples & monuments</div>
+              </div>
+              <div>
+                <div className="font-semibold text-blue-800">🕉️ Cultural Wisdom</div>
+                <div className="text-blue-600">Tibetan & Himachali traditions</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Search */}
