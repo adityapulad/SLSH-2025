@@ -15,6 +15,13 @@ interface GamificationContextType {
   simulateSteps: (steps: number) => void
   recentCheckIns: CheckIn[]
   addCheckIn: (checkIn: CheckIn) => void
+  todayStats: {
+    bottlesRefilled: number
+    wasteDisposed: number
+    stepsWalked: number
+    pointsEarned: number
+  }
+  totalPoints: number
 }
 
 const GamificationContext = createContext<GamificationContextType | undefined>(undefined)
