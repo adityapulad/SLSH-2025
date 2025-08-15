@@ -426,11 +426,33 @@ export function QRScanner() {
                     <div className="p-3 bg-white rounded-lg border">
                       <div className="font-medium text-sm sm:text-base">{scanResult.location.name}</div>
                       <div className="text-sm text-gray-600">{scanResult.location.address}</div>
+                      <div className="text-xs text-blue-600 mt-1">📍 Himachal Pradesh</div>
                     </div>
 
-                    <div className="flex items-center justify-center gap-2 flex-wrap">
-                      <Badge className="bg-green-100 text-green-800">{scanResult.action.description}</Badge>
-                      <Badge className="bg-yellow-100 text-yellow-800">+{scanResult.points} points</Badge>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-center gap-2 flex-wrap">
+                        <Badge className="bg-green-100 text-green-800">{scanResult.action.description}</Badge>
+                        <Badge className="bg-yellow-100 text-yellow-800">+{scanResult.points} total points</Badge>
+                      </div>
+
+                      {scanResult.bonusPoints && scanResult.bonusPoints > 0 && (
+                        <div className="text-center">
+                          <div className="text-xs text-green-700 font-medium">
+                            Base: {scanResult.basePoints} + Bonus: {scanResult.bonusPoints} points
+                          </div>
+                          {scanResult.bonusReasons && scanResult.bonusReasons.length > 0 && (
+                            <div className="text-xs text-green-600 mt-1">
+                              🎯 {scanResult.bonusReasons.join(", ")}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {scanResult.storyUnlocked && (
+                        <Badge className="bg-purple-100 text-purple-800 w-full justify-center">
+                          🏛️ Cultural Story Unlocked!
+                        </Badge>
+                      )}
                     </div>
 
                     <img
@@ -438,6 +460,19 @@ export function QRScanner() {
                       alt={scanResult.location.name}
                       className="w-full h-32 object-cover rounded-lg"
                     />
+
+                    {scanResult.nextActions && scanResult.nextActions.length > 0 && (
+                      <div className="p-3 bg-blue-50 rounded-lg">
+                        <div className="text-sm font-medium text-blue-800 mb-2">More actions available:</div>
+                        <div className="space-y-1">
+                          {scanResult.nextActions.map((nextAction, index) => (
+                            <div key={index} className="text-xs text-blue-700">
+                              • {nextAction.description} (+{nextAction.points} pts)
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
