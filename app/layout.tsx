@@ -5,7 +5,6 @@ import { GeistMono } from "geist/font/mono"
 import { AuthProvider } from "@/contexts/auth-context"
 import { GamificationProvider } from "@/contexts/gamification-context"
 import { StoriesProvider } from "@/contexts/stories-context"
-import { GeofenceNotification } from "@/components/geofence-notification"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -46,10 +45,7 @@ html {
       <body className="min-h-screen bg-gray-50">
         <AuthProvider>
           <GamificationProvider>
-            <StoriesProvider>
-              {children}
-              <GeofenceNotification />
-            </StoriesProvider>
+            <StoriesProvider>{children}</StoriesProvider>
           </GamificationProvider>
         </AuthProvider>
       </body>

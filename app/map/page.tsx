@@ -3,6 +3,7 @@
 import { EcoMap } from "@/components/eco-map"
 import { PageHeader } from "@/components/page-header"
 import { MobileNavigation } from "@/components/mobile-navigation"
+import { GeofenceNotification } from "@/components/geofence-notification"
 import { useAuth } from "@/contexts/auth-context"
 import { useRouter } from "next/navigation"
 
@@ -31,6 +32,8 @@ export default function MapPage() {
           </div>
         </div>
       )}
+
+      <GeofenceNotification />
 
       <MobileNavigation />
     </div>
