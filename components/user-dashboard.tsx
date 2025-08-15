@@ -96,43 +96,88 @@ export function UserDashboard() {
         </CardContent>
       </Card>
 
-      {/* Achievements */}
+      {/* Himachal Pradesh Achievements */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
             <Trophy className="h-5 w-5 mr-2" />
-            Achievements
+            Himachal Pradesh Achievements
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-3">
-            <div className="flex items-center p-3 bg-green-50 rounded-lg">
+            <div className="flex items-center p-3 bg-green-50 rounded-lg border border-green-200">
               <TreePine className="h-6 w-6 text-green-600 mr-3" />
               <div>
-                <div className="font-medium text-sm">Eco Warrior</div>
-                <div className="text-xs text-gray-600">Visited 10 eco-locations</div>
+                <div className="font-medium text-sm">Mountain Explorer</div>
+                <div className="text-xs text-gray-600">Visited 8 hill stations</div>
               </div>
             </div>
-            <div className="flex items-center p-3 bg-blue-50 rounded-lg">
+            <div className="flex items-center p-3 bg-blue-50 rounded-lg border border-blue-200">
               <Droplets className="h-6 w-6 text-blue-600 mr-3" />
               <div>
-                <div className="font-medium text-sm">Water Saver</div>
-                <div className="text-xs text-gray-600">Refilled 50 bottles</div>
+                <div className="font-medium text-sm">Himalayan Water Guardian</div>
+                <div className="text-xs text-gray-600">50 refills in HP</div>
               </div>
             </div>
-            <div className="flex items-center p-3 bg-orange-50 rounded-lg">
+            <div className="flex items-center p-3 bg-orange-50 rounded-lg border border-orange-200">
               <Trash2 className="h-6 w-6 text-orange-600 mr-3" />
               <div>
-                <div className="font-medium text-sm">Clean Hero</div>
-                <div className="text-xs text-gray-600">Disposed 25 items</div>
+                <div className="font-medium text-sm">Clean Hills Champion</div>
+                <div className="text-xs text-gray-600">25 waste disposals</div>
               </div>
             </div>
-            <div className="flex items-center p-3 bg-purple-50 rounded-lg">
+            <div className="flex items-center p-3 bg-purple-50 rounded-lg border border-purple-200">
               <Star className="h-6 w-6 text-purple-600 mr-3" />
               <div>
-                <div className="font-medium text-sm">Explorer</div>
-                <div className="text-xs text-gray-600">Unlocked 5 stories</div>
+                <div className="font-medium text-sm">Cultural Heritage Seeker</div>
+                <div className="text-xs text-gray-600">Unlocked 5 HP stories</div>
               </div>
+            </div>
+            <div className="flex items-center p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+              <Camera className="h-6 w-6 text-yellow-600 mr-3" />
+              <div>
+                <div className="font-medium text-sm">Shimla Specialist</div>
+                <div className="text-xs text-gray-600">Completed Mall Road trail</div>
+              </div>
+            </div>
+            <div className="flex items-center p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+              <MapPin className="h-6 w-6 text-indigo-600 mr-3" />
+              <div>
+                <div className="font-medium text-sm">DevBhoomi Devotee</div>
+                <div className="text-xs text-gray-600">Visited 3 temples</div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Himachal Pradesh Progress */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <MapPin className="h-5 w-5 mr-2" />
+            Himachal Pradesh Journey
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Regions Explored</span>
+              <span className="text-sm text-gray-600">3/12</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-green-600 h-2 rounded-full" style={{ width: '25%' }}></div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="text-green-600">✓ Shimla</div>
+              <div className="text-green-600">✓ Kullu</div>
+              <div className="text-green-600">✓ Dharamshala</div>
+              <div className="text-gray-400">○ Manali</div>
+              <div className="text-gray-400">○ Kasauli</div>
+              <div className="text-gray-400">○ Dalhousie</div>
+              <div className="text-gray-400">○ Chamba</div>
+              <div className="text-gray-400">○ Kinnaur</div>
             </div>
           </div>
         </CardContent>
