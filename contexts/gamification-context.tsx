@@ -209,6 +209,24 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
     setRecentCheckIns((prev) => [checkIn, ...prev.slice(0, 9)])
   }
 
+  // Calculate today's stats
+  const todayStats = {
+    bottlesRefilled: recentCheckIns.filter(c =>
+      c.actionType === "water-refill" &&
+      c.timestamp.toDateString() === new Date().toDateString()
+    ).length,
+    wasteDisposed: recentCheckIns.filter(c =>
+      (c.actionType === "waste-deposit" || c.actionType.includes("waste")) &&
+      c.timestamp.toDateString() === new Date().toDateString()
+    ).length,
+    stepsWalked: dailySteps,
+    pointsEarned: recentCheckIns
+      .filter(c => c.timestamp.toDateString() === new Date().toDateString())
+      .reduce((sum, c) => sum + c.pointsEarned, 0) + stepPoints
+  }
+
+  const totalPoints = user?.ecoPoints || 0
+
   return (
     <GamificationContext.Provider
       value={{
@@ -221,6 +239,8 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
         simulateSteps,
         recentCheckIns,
         addCheckIn,
+        todayStats,
+        totalPoints,
       }}
     >
       {children}
