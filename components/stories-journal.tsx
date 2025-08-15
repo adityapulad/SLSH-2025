@@ -48,12 +48,17 @@ export function StoriesJournal() {
       <div className="min-h-screen bg-gray-50 p-4">
         <Card className="max-w-md mx-auto">
           <CardContent className="p-8 text-center">
+            <div className="text-4xl mb-4">🏔️</div>
             <BookOpen className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-lg font-semibold mb-2">No Stories Yet</h3>
+            <h3 className="text-lg font-semibold mb-2">No Himachali Stories Yet</h3>
             <p className="text-gray-600 mb-4">
-              Explore eco-locations and scan QR codes to unlock fascinating cultural stories!
+              Explore the mystical valleys, ancient temples, and cultural heritage sites of Himachal Pradesh.
+              Scan QR codes at eco-locations to unlock fascinating stories of DevBhoomi!
             </p>
-            <Button className="bg-green-600 hover:bg-green-700">Start Exploring</Button>
+            <div className="text-sm text-blue-600 mb-4">
+              🏛️ Temple legends • 🕉️ Buddhist wisdom • 🏔️ Mountain folklore
+            </div>
+            <Button className="bg-green-600 hover:bg-green-700">Start Exploring HP</Button>
           </CardContent>
         </Card>
       </div>
