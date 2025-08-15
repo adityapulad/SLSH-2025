@@ -30,15 +30,18 @@ export function StoriesProvider({ children }: { children: ReactNode }) {
   const [showGeofenceNotification, setShowGeofenceNotification] = useState(false)
   const [geofenceStory, setGeofenceStory] = useState<CulturalStory | null>(null)
 
-  // Initialize with any pre-unlocked stories
+  // Initialize with some pre-unlocked Himachal Pradesh stories
   useEffect(() => {
     const allStories = mockEcoLocations.filter((location) => location.story).map((location) => location.story!)
 
-    // For demo, unlock one story initially
-    const initialStory = allStories[0]
-    if (initialStory) {
-      initialStory.isUnlocked = true
-      setUnlockedStories([initialStory])
+    // For demo, unlock the first 3 stories to showcase Himachal Pradesh heritage
+    const initialStories = allStories.slice(0, 3)
+    initialStories.forEach(story => {
+      story.isUnlocked = true
+    })
+
+    if (initialStories.length > 0) {
+      setUnlockedStories(initialStories)
     }
   }, [])
 
