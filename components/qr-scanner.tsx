@@ -10,6 +10,7 @@ import { mockEcoLocations } from "@/data/mock-data"
 import { useGamification } from "@/contexts/gamification-context"
 import { PointsAnimation } from "./points-animation"
 import type { EcoLocation } from "@/types"
+import jsQR from "jsqr"
 
 export function QRScanner() {
   const [isScanning, setIsScanning] = useState(false)
