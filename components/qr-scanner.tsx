@@ -139,47 +139,91 @@ export function QRScanner() {
 
     setIsScanning(true)
 
-    // Simulate scanning delay
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    try {
+      // Find location by QR code first for UI feedback
+      const location = mockEcoLocations.find((loc) => loc.qrCode === qrCode)
 
-    // Find location by QR code
-    const location = mockEcoLocations.find((loc) => loc.qrCode === qrCode)
+      if (!location) {
+        setScanResult({
+          success: false,
+          message: "Invalid QR code. Please scan a valid eco-location QR code from Himachal Pradesh.",
+        })
+        setIsScanning(false)
+        return
+      }
 
-    if (!location) {
+      // Get the first available action (in real app, user would select)
+      const action = location.availableActions[0]
+      if (!action) {
+        setScanResult({
+          success: false,
+          message: "No eco-actions available at this location.",
+        })
+        setIsScanning(false)
+        return
+      }
+
+      // Call the enhanced check-in API
+      const response = await fetch(`/api/locations/${location.id}/checkin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: 'demo-user-123', // In real app, get from auth context
+          qrCode: qrCode,
+          action: action.type,
+          timestamp: new Date().toISOString()
+        })
+      })
+
+      const result = await response.json()
+
+      if (!result.success) {
+        setScanResult({
+          success: false,
+          message: result.error || "Check-in failed. Please try again.",
+        })
+        setIsScanning(false)
+        return
+      }
+
+      // Award points through gamification system
+      await earnPoints(action.type, result.data.totalPoints, location.id)
+
+      // Show success result with enhanced data
+      setScanResult({
+        success: true,
+        location,
+        action: {
+          ...action,
+          description: result.data.action
+        },
+        points: result.data.totalPoints,
+        basePoints: result.data.basePoints,
+        bonusPoints: result.data.bonusPoints,
+        bonusReasons: result.data.bonusReasons,
+        message: result.data.message,
+        storyUnlocked: result.data.storyUnlocked,
+        story: result.data.story,
+        nextActions: result.data.nextActions
+      })
+
+      // Show points animation
+      setAnimationData({
+        points: result.data.totalPoints,
+        action: result.data.action,
+        bonus: result.data.bonusPoints > 0
+      })
+      setShowPointsAnimation(true)
+
+    } catch (error) {
+      console.error('Check-in error:', error)
       setScanResult({
         success: false,
-        message: "Invalid QR code. Please try scanning a valid eco-location QR code.",
+        message: "Network error. Please check your connection and try again.",
       })
-      setIsScanning(false)
-      return
     }
-
-    // Get available action (for demo, we'll use the first available action)
-    const action = location.availableActions[0]
-    if (!action) {
-      setScanResult({
-        success: false,
-        message: "No actions available at this location.",
-      })
-      setIsScanning(false)
-      return
-    }
-
-    // Award points
-    await earnPoints(action.type, action.points, location.id)
-
-    // Show success result
-    setScanResult({
-      success: true,
-      location,
-      action,
-      points: action.points,
-      message: `Successfully checked in at ${location.name}!`,
-    })
-
-    // Show points animation
-    setAnimationData({ points: action.points, action: action.type })
-    setShowPointsAnimation(true)
 
     setIsScanning(false)
   }
