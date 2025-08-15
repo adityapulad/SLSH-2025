@@ -41,7 +41,17 @@ export function CommunityEvents() {
     if (title.toLowerCase().includes("cleanup")) return "bg-green-100 text-green-800"
     if (title.toLowerCase().includes("workshop")) return "bg-blue-100 text-blue-800"
     if (title.toLowerCase().includes("market")) return "bg-orange-100 text-orange-800"
-    return "bg-purple-100 text-purple-800"
+    if (title.toLowerCase().includes("trek")) return "bg-purple-100 text-purple-800"
+    return "bg-indigo-100 text-indigo-800"
+  }
+
+  const getLocationEmoji = (location: string) => {
+    if (location.includes("Shimla")) return "🏔️"
+    if (location.includes("Manali")) return "🏂"
+    if (location.includes("Kullu")) return "🍎"
+    if (location.includes("Parvati")) return "🌿"
+    if (location.includes("Dharamshala")) return "🕉️"
+    return "🏞️"
   }
 
   const isEventSoon = (date: Date) => {
