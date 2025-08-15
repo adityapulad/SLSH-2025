@@ -147,13 +147,17 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
     }
 
     // Check Mountain Guardian (25 waste deposits)
-    const wasteDeposits = recentCheckIns.filter((c) => c.actionType === "waste-deposit").length
+    const wasteDeposits = recentCheckIns.filter((c) =>
+      c.actionType === "waste-deposit" || c.actionType.includes("waste")
+    ).length
     if (wasteDeposits >= 25) {
       unlockBadge("2")
     }
 
-    // Check Local Patron (10 eco-restaurant visits) - already unlocked in mock data
-    const restaurantVisits = recentCheckIns.filter((c) => c.actionType === "eco-restaurant-visit").length
+    // Check Local Patron (10 eco-restaurant visits)
+    const restaurantVisits = recentCheckIns.filter((c) =>
+      c.actionType === "eco-restaurant-visit" || c.actionType === "visit"
+    ).length
     if (restaurantVisits >= 10) {
       unlockBadge("3")
     }
@@ -167,6 +171,30 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
     // Check Step Master (100km walked)
     if (user.totalDistanceWalked >= 100) {
       unlockBadge("5")
+    }
+
+    // Himachal Pradesh specific badges
+    // Himalayan Explorer - Visit 5 different valleys
+    const uniqueLocations = [...new Set(recentCheckIns.map(c => c.locationId))].length
+    if (uniqueLocations >= 5) {
+      unlockBadge("6")
+    }
+
+    // High Altitude Hero - Check in at high altitude locations
+    const highAltitudeVisits = recentCheckIns.filter(c =>
+      c.locationId && (
+        c.locationId.includes("shimla") ||
+        c.locationId.includes("manali") ||
+        c.locationId.includes("dharamshala")
+      )
+    ).length
+    if (highAltitudeVisits >= 3) {
+      unlockBadge("7")
+    }
+
+    // Cultural Bridge - Unlock cultural stories
+    if (storiesUnlocked >= 5) {
+      unlockBadge("8")
     }
   }
 
