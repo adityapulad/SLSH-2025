@@ -183,45 +183,55 @@ export function UserDashboard() {
         </CardContent>
       </Card>
 
-      {/* Recent Activity */}
+      {/* Recent Activity in Himachal Pradesh */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <MapPin className="h-5 w-5 mr-2" />
-            Recent Activity
+            <Calendar className="h-5 w-5 mr-2" />
+            Recent Activity in HP
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
               <div className="flex items-center">
                 <Droplets className="h-5 w-5 text-blue-500 mr-3" />
                 <div>
-                  <div className="font-medium text-sm">Water Refill</div>
-                  <div className="text-xs text-gray-600">Mall Road, Shimla</div>
+                  <div className="font-medium text-sm">Himalayan Water Refill</div>
+                  <div className="text-xs text-gray-600">Mall Road, Shimla • +8 pts (3 bonus)</div>
                 </div>
               </div>
               <div className="text-xs text-gray-500">2 hours ago</div>
             </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
               <div className="flex items-center">
                 <Camera className="h-5 w-5 text-green-500 mr-3" />
                 <div>
-                  <div className="font-medium text-sm">QR Check-in</div>
-                  <div className="text-xs text-gray-600">Ridge, Shimla</div>
+                  <div className="font-medium text-sm">Heritage Site Check-in</div>
+                  <div className="text-xs text-gray-600">Ridge, Shimla • +15 pts (10 bonus)</div>
                 </div>
               </div>
               <div className="text-xs text-gray-500">5 hours ago</div>
             </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
               <div className="flex items-center">
                 <Trash2 className="h-5 w-5 text-orange-500 mr-3" />
                 <div>
-                  <div className="font-medium text-sm">Waste Disposal</div>
-                  <div className="text-xs text-gray-600">Christ Church, Shimla</div>
+                  <div className="font-medium text-sm">Mountain Clean-up</div>
+                  <div className="text-xs text-gray-600">Christ Church, Shimla • +25 pts (5 bonus)</div>
                 </div>
               </div>
               <div className="text-xs text-gray-500">1 day ago</div>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
+              <div className="flex items-center">
+                <Star className="h-5 w-5 text-purple-500 mr-3" />
+                <div>
+                  <div className="font-medium text-sm">Cultural Story Unlocked</div>
+                  <div className="text-xs text-gray-600">Jakhu Temple • British Era Tale</div>
+                </div>
+              </div>
+              <div className="text-xs text-gray-500">2 days ago</div>
             </div>
           </div>
         </CardContent>
