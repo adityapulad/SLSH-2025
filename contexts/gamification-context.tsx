@@ -19,16 +19,22 @@ interface GamificationContextType {
 
 const GamificationContext = createContext<GamificationContextType | undefined>(undefined)
 
-// Point values for different actions
+// Point values for different actions with Himachal Pradesh bonuses
 const ACTION_POINTS = {
   "water-refill": 20,
   "waste-deposit": 30,
   "eco-restaurant-visit": 50,
+  "visit": 40,
   "story-unlock": 25,
   "daily-steps-5k": 50,
   "daily-steps-8k": 100,
   "daily-steps-12k": 200,
   "daily-steps-15k": 300,
+  // Himachal Pradesh specific bonuses
+  "mountain-bonus": 5,
+  "heritage-bonus": 10,
+  "high-altitude-bonus": 8,
+  "cultural-bonus": 12,
 }
 
 export function GamificationProvider({ children }: { children: ReactNode }) {
