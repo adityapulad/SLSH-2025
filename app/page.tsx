@@ -15,12 +15,6 @@ export default function HomePage() {
   const { user, isLoading } = useAuth()
   const { totalPoints, todayStats } = useGamification()
   const router = useRouter()
-  const [mapLoading, setMapLoading] = useState(true)
-
-  useEffect(() => {
-    const timer = setTimeout(() => setMapLoading(false), 2000)
-    return () => clearTimeout(timer)
-  }, [])
 
   if (isLoading) {
     return (
