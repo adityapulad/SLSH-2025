@@ -319,12 +319,21 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
   }
 
   const getGoogleMapsEmbedUrl = () => {
-    const baseUrl = `https://maps.google.com/maps?q=${mapCenter.lat},${mapCenter.lng}&t=${mapType}&z=${zoom}&output=embed`
+    let markersParam = ""
 
+    // Add selected location marker
     if (selectedLocation) {
-      return `${baseUrl}&markers=${selectedLocation.latitude},${selectedLocation.longitude}`
+      markersParam = `&markers=color:red%7C${selectedLocation.latitude},${selectedLocation.longitude}`
     }
 
+    // Add user location marker if available
+    if (userLocation && !selectedLocation) {
+      markersParam = `&markers=color:blue%7Clabel:You%7C${userLocation.lat},${userLocation.lng}`
+    } else if (userLocation && selectedLocation) {
+      markersParam += `&markers=color:blue%7Clabel:You%7C${userLocation.lat},${userLocation.lng}`
+    }
+
+    const baseUrl = `https://maps.google.com/maps?q=${mapCenter.lat},${mapCenter.lng}&t=${mapType}&z=${zoom}&output=embed${markersParam}`
     return baseUrl
   }
 
