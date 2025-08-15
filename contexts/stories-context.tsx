@@ -63,16 +63,16 @@ export function StoriesProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // Simulate user movement for demo
+  // Simulate user movement for demo in Himachal Pradesh
   useEffect(() => {
     const interval = setInterval(() => {
-      // Simulate user moving around Delhi area
-      const baseLat = 28.6139
-      const baseLng = 77.209
+      // Simulate user moving around Shimla area
+      const baseLat = 31.1048 // Shimla latitude
+      const baseLng = 77.1734 // Shimla longitude
       const randomLat = baseLat + (Math.random() - 0.5) * 0.02
       const randomLng = baseLng + (Math.random() - 0.5) * 0.02
       checkGeofencing(randomLat, randomLng)
-    }, 10000) // Check every 10 seconds
+    }, 15000) // Check every 15 seconds
 
     return () => clearInterval(interval)
   }, [showGeofenceNotification])
