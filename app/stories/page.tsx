@@ -17,7 +17,7 @@ export default function StoriesPage() {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
-          <h1 className="font-semibold text-lg">Stories</h1>
+          <h1 className="font-semibold text-lg">HP Stories</h1>
           <Button variant="ghost" size="sm" onClick={() => router.push("/profile")}>
             <User className="h-4 w-4" />
           </Button>
