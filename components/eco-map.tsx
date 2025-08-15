@@ -710,6 +710,26 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
               <Layers className="h-4 w-4" />
             )}
           </Button>
+          {userLocation && (
+            <Button
+              onClick={() => {
+                setMapCenter(userLocation)
+                setZoom(15)
+                setSelectedLocation(null)
+                setShowLocationDetails(false)
+                if (liveRegionRef.current) {
+                  liveRegionRef.current.textContent = "Map centered on your location"
+                }
+              }}
+              size="sm"
+              className="bg-blue-600 text-white hover:bg-blue-700 shadow-lg focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 w-10 h-10 p-0"
+              variant="outline"
+              aria-label="Center map on your location"
+              title="Go to my location"
+            >
+              <MapPin className="h-4 w-4" />
+            </Button>
+          )}
           <Button
             onClick={recenterMap}
             size="sm"
@@ -719,6 +739,18 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
           >
             <Navigation className="h-4 w-4" aria-hidden="true" />
           </Button>
+          {locationPermission === 'denied' && (
+            <Button
+              onClick={requestLocationPermission}
+              size="sm"
+              className="bg-orange-600 text-white hover:bg-orange-700 shadow-lg focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 w-10 h-10 p-0"
+              variant="outline"
+              aria-label="Request location access"
+              title="Enable location"
+            >
+              <MapPin className="h-4 w-4" />
+            </Button>
+          )}
         </div>
 
         {selectedLocation && (
