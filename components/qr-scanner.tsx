@@ -104,16 +104,34 @@ export function QRScanner() {
     }, 500) // Check every 500ms
   }
 
-  // Simulate QR detection from image data
+  // Real QR detection using jsQR
   const detectQRFromImageData = (imageData: ImageData) => {
-    // In a real implementation, you would use a QR detection library here
-    // For demo purposes, we'll simulate detection of demo QR codes
-    // This is a placeholder - in reality you'd use libraries like:
-    // - qr-scanner
-    // - jsqr
-    // - qrcode-reader
-    // For now, we'll just check if any demo QR codes should be "detected"
-    // This is just for demonstration
+    try {
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: "dontInvert",
+      })
+
+      if (code && code.data) {
+        // Found a QR code, process it
+        console.log("QR Code detected:", code.data)
+        handleScan(code.data)
+
+        // Stop scanning temporarily to prevent multiple scans
+        if (scanIntervalRef.current) {
+          clearInterval(scanIntervalRef.current)
+          scanIntervalRef.current = null
+        }
+
+        // Restart scanning after a delay
+        setTimeout(() => {
+          if (isCameraActive && !isScanning) {
+            startQRDetection()
+          }
+        }, 3000)
+      }
+    } catch (error) {
+      console.error("QR detection error:", error)
+    }
   }
 
   const handleScan = async (qrCode: string) => {
