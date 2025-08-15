@@ -43,6 +43,8 @@ export function EcoMap({ onLocationSelect }: EcoMapProps) {
   const [mapType, setMapType] = useState<"roadmap" | "satellite" | "terrain">("roadmap")
   const [mapCenter, setMapCenter] = useState({ lat: 31.1048, lng: 77.1734 }) // Shimla, HP
   const [zoom, setZoom] = useState(9)
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
+  const [locationPermission, setLocationPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [showLocationDetails, setShowLocationDetails] = useState(false)
