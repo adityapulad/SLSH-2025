@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { mockEcoLocations } from "@/data/mock-data"
+import { recordCheckin } from "@/lib/repository"
 
 // Himachal Pradesh specific achievements and bonus points
 const himachalBonuses = {
@@ -96,8 +97,23 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       checkinType: "qr-scan"
     }
 
-    // Simulate saving to database (in real app, save to your database)
-    console.log("Check-in recorded:", checkinData)
+    // Persist to DB when available (no-op fallback otherwise)
+    await recordCheckin({
+      userId,
+      locationId: params.id,
+      locationName: location.name,
+      action: availableAction.type,
+      actionDescription: availableAction.description,
+      basePoints: pointsEarned,
+      bonusPoints,
+      totalPoints,
+      bonusReasons,
+      coordinates: { latitude: location.latitude, longitude: location.longitude },
+      address: location.address,
+      timestamp: checkinData.timestamp,
+      region: "Himachal Pradesh",
+      checkinType: "qr-scan",
+    })
 
     // Unlock story if available
     let storyUnlocked = false

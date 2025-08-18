@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model EcoLocation {
+  id            String    @id
+  name          String
+  type          String
+  latitude      Float
+  longitude     Float
+  address       String
+  description   String
+  ecoRating     Int
+  image         String
+  qrCode        String
+  averageRating Float     @default(0)
+  totalReviews  Int       @default(0)
+  actionsJson   Json?
+
+  story     CulturalStory?
+  reviews   Review[]
+  checkins  Checkin[]
+}
+
+model CulturalStory {
+  id         String      @id
+  title      String
+  content    String
+  images     Json
+  location   EcoLocation @relation(fields: [locationId], references: [id])
+  locationId String      @unique
+}
+
+model Review {
+  id                 String      @id
+  userId             String
+  userName           String
+  userProfilePicture String?
+  location           EcoLocation @relation(fields: [locationId], references: [id])
+  locationId         String
+  rating             Int
+  title              String
+  content            String
+  images             Json?
+  likes              Int         @default(0)
+  dislikes           Int         @default(0)
+  userLikes          Json        @default("[]")
+  userDislikes       Json        @default("[]")
+  isVerifiedVisit    Boolean     @default(false)
+  visitDate          DateTime?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  helpful            Int         @default(0)
+  tags               Json        @default("[]")
+}
+
+model Checkin {
+  id                String      @id
+  userId            String
+  location          EcoLocation @relation(fields: [locationId], references: [id])
+  locationId        String
+  locationName      String
+  action            String
+  actionDescription String
+  basePoints        Int
+  bonusPoints       Int
+  totalPoints       Int
+  bonusReasons      Json
+  latitude          Float
+  longitude         Float
+  address           String
+  timestamp         DateTime    @default(now())
+  region            String
+  checkinType       String
+}
+
