@@ -1,4 +1,4 @@
-PrithviPath
+<h>PrithviPath</h>
 
 Your Guide to Sustainable & Immersive Travel in the Himalayas
 
